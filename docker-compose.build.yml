@@ -4,8 +4,6 @@
 # Copyright (C) 2017 National Institute of Informatics.
 #
 
-version: "3.2"
-
 services:
     stage_1:
         build:
