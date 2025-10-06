@@ -94,7 +94,6 @@ jobs:
         ./install.sh
       env:
         DOCKER_BUILDKIT: 1
-        COMPOSE_DOCKER_CLI_BUILD: 1
 
     - name: Wait for services to be ready
       run: |
@@ -146,5 +145,4 @@ jobs:
       run: |
         docker compose -f docker-compose2.yml down -v
         docker system prune -f
-      
-      
+
