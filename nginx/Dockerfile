@@ -19,15 +19,13 @@ RUN wget "https://github.com/samizdatco/nginx-http-auth-digest/archive/master.zi
 # https://github.com/nginx-shib/nginx-http-shibboleth
 RUN wget "https://github.com/nginx-shib/nginx-http-shibboleth/archive/v2.0.2.tar.gz" -O nginx-http-shibboleth-2.0.2.tar.gz
 RUN wget "https://github.com/openresty/headers-more-nginx-module/archive/v0.34.tar.gz" -O headers-more-nginx-module-0.34.tar.gz
-RUN wget "https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz" -O ngx_cache_purge-2.3.tar.gz
 
 RUN unzip nginx-http-auth-digest.zip && \
   tar zxf nginx-http-shibboleth-2.0.2.tar.gz && \
-  tar zxf headers-more-nginx-module-0.34.tar.gz && \
-  tar zxf ngx_cache_purge-2.3.tar.gz
+  tar zxf headers-more-nginx-module-0.34.tar.gz
 
 #RUN cd nginx-1.18.0 && dpkg-buildpackage -b
-RUN sed -i "s#--modules-path=/usr/lib/nginx/modules#--modules-path=/usr/lib/nginx/modules --add-module=/tmp/headers-more-nginx-module-0.34 --add-module=/tmp/nginx-http-shibboleth-2.0.2 --add-module=/tmp/nginx-http-auth-digest-master --add-module=/tmp/ngx_cache_purge-2.3 #g" nginx-1.20.2/debian/rules
+RUN sed -i "s#--modules-path=/usr/lib/nginx/modules#--modules-path=/usr/lib/nginx/modules --add-module=/tmp/headers-more-nginx-module-0.34 --add-module=/tmp/nginx-http-shibboleth-2.0.2 --add-module=/tmp/nginx-http-auth-digest-master #g" nginx-1.20.2/debian/rules
 RUN cd nginx-1.20.2 && dpkg-buildpackage -b
 
 FROM ubuntu:focal AS nginx-stage_1
