@@ -24,7 +24,7 @@
 
 
 # Use Python-3.6:
-FROM python:3.6-slim-buster AS stage_1
+FROM python:3.6-slim-bullseye AS stage_1
 
 # Configure Weko instance:
 ENV INVENIO_WEB_HOST=127.0.0.1
