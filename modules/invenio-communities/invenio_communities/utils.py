@@ -34,7 +34,7 @@ from flask import current_app
 from flask_login import current_user
 from invenio_db import db
 from invenio_files_rest.errors import FilesException
-from invenio_files_rest.models import Bucket, Location, ObjectVersion
+import invenio_files_rest.models
 from invenio_records.api import Record
 
 
@@ -102,7 +102,7 @@ def save_and_validate_logo(logo_stream, logo_filename, community_id):
 
     logos_bucket_id = cfg['COMMUNITIES_BUCKET_UUID']
     logo_max_size = cfg['COMMUNITIES_LOGO_MAX_SIZE']
-    logos_bucket = Bucket.query.get(logos_bucket_id)
+    logos_bucket = invenio_files_rest.models.Bucket.query.get(logos_bucket_id)
     ext = os.path.splitext(logo_filename)[1]
     ext = ext[1:] if ext.startswith('.') else ext
 
@@ -114,7 +114,7 @@ def save_and_validate_logo(logo_stream, logo_filename, community_id):
     if ext in cfg['COMMUNITIES_LOGO_EXTENSIONS']:
         key = "{0}/logo.{1}".format(community_id, ext)
         logo_stream.seek(0)  # Rewind the stream to the beginning
-        ObjectVersion.create(logos_bucket, key, stream=logo_stream,
+        invenio_files_rest.models.ObjectVersion.create(logos_bucket, key, stream=logo_stream,
                              size=logo_size)
         return ext
     else:
@@ -128,14 +128,14 @@ def initialize_communities_bucket():
     """
     bucket_id = UUID(current_app.config['COMMUNITIES_BUCKET_UUID'])
 
-    if Bucket.query.get(bucket_id):
+    if invenio_files_rest.models.Bucket.query.get(bucket_id):
         raise FilesException("Bucket with UUID {} already exists.".format(
             bucket_id))
     else:
         storage_class = current_app.config['FILES_REST_DEFAULT_STORAGE_CLASS']
         try:
-            location = Location.get_default()
-            bucket = Bucket(id=bucket_id,
+            location = invenio_files_rest.models.Location.get_default()
+            bucket = invenio_files_rest.models.Bucket(id=bucket_id,
                             location=location,
                             default_storage_class=storage_class)
             db.session.add(bucket)
